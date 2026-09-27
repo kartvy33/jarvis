@@ -1,136 +1,103 @@
-# JARVIS
+# JARVIS V1.5
 
-A simple Python voice assistant for Windows.
+JARVIS is a Python voice assistant for Windows with AI, maths, laptop control, Android control and ESP32 control.
 
-## Current version
+## Install
 
-**JARVIS V1.4**
-
-The project is designed to stay beginner-friendly while leaving room for future laptop, phone and ESP32 control.
-
-## Features
-
-- Laptop microphone input
-- Spoken responses with `pyttsx3`
-- Local AI through Ollama
-- Optional OpenAI Responses API support
-- Offline fallback when no AI model is connected
-- Safe local maths engine
-- Time and date
-- Google and YouTube search
-- Open Chrome, Notepad, Calculator and File Explorer
-- Short conversation memory while JARVIS is running
-- AI status command
-
-## 1. Install Python packages
-
-Open Command Prompt in this folder:
+Open Command Prompt:
 
 ```bat
 cd C:\Users\acer\Desktop\JARVIS
 python -m pip install -r requirements.txt
-```
-
-If PyAudio installation gives an error, install the normal 64-bit Python 3.11 build and try the command again.
-
-## 2. Run JARVIS
-
-```bat
 python main.py
 ```
 
-You should hear:
+## AI
 
-> I am ready. Please say something.
-
-## 3. Local AI with Ollama
-
-This is the preferred AI path because the model runs on your laptop.
-
-Install Ollama, then download a model. A smaller model is easier on disk/RAM. For example:
+Ollama is preferred because it can run locally.
 
 ```bat
 ollama pull llama3.2:3b
 ```
 
-Then start JARVIS:
+OpenAI is optional. Keep API keys out of the source code.
+
+## Laptop control
+
+PyAutoGUI is used for mouse/keyboard-style Windows automation.
+
+Say:
+- "laptop help"
+- "laptop screenshot"
+- "laptop lock"
+- "laptop copy"
+- "laptop paste"
+- "laptop minimize"
+- "laptop show desktop"
+- "laptop volume up"
+- "laptop volume down"
+- "laptop mute"
+
+## Android phone control
+
+JARVIS uses Google's Android Debug Bridge (ADB). Install Android SDK Platform Tools and make sure `adb` works in Command Prompt.
+
+Check:
 
 ```bat
-python main.py
+adb devices
 ```
 
-JARVIS automatically checks the local Ollama server.
+For USB debugging, enable Developer Options and USB debugging on the phone and approve the computer.
 
-If you use another Ollama model, set:
+Android 11+ also supports wireless debugging. Your computer and phone need to be on the same Wi-Fi network.
+
+Say:
+- "phone help"
+- "phone status"
+- "phone home"
+- "phone back"
+- "phone lock"
+- "phone volume up"
+- "phone volume down"
+- "phone mute"
+- "phone open YouTube"
+- "phone open Google"
+- "phone search ESP32"
+
+## ESP32 control
+
+The ESP32 runs `esp32/JARVIS_ESP32.ino`.
+
+1. Open the sketch in Arduino IDE.
+2. Change Wi-Fi SSID/password.
+3. Change `JARVIS_TOKEN`.
+4. Upload it to the ESP32.
+5. Open Serial Monitor at 115200.
+6. Note the ESP32 IP address.
+7. In the JARVIS Command Prompt set:
 
 ```bat
-setx OLLAMA_MODEL "your-model-name"
+setx ESP32_IP "192.168.1.123"
+setx ESP32_TOKEN "your-token"
 ```
 
-Close and reopen Command Prompt after using `setx`.
+Close and reopen Command Prompt after `setx`.
 
-You can ask JARVIS:
+Then say:
+- "ESP32 help"
+- "ESP32 status"
+- "ESP32 on"
+- "ESP32 off"
+- "ESP32 restart"
 
-> AI status
+The ESP32 and laptop should normally be on the same LAN. Arduino-ESP32 supports Wi-Fi station mode and HTTP servers.
 
-## 4. Optional OpenAI AI
+## Important security note
 
-OpenAI API access is separate from a ChatGPT subscription and can be billed according to the API account/model.
+The ESP32 controller is intended for a trusted local network. Change the token and do not expose its HTTP control port directly to the public Internet.
 
-Set your API key as an environment variable instead of putting it in Python:
-
-```bat
-setx OPENAI_API_KEY "YOUR_API_KEY_HERE"
-setx OPENAI_MODEL "gpt-5.6"
-```
-
-Then open a new Command Prompt and run:
-
-```bat
-python main.py
-```
-
-Do **not** commit your API key. The repository ignores `.env`.
-
-## 5. Maths
-
-JARVIS calculates locally without AI.
-
-Examples:
-
-- "calculate 25 times 4"
-- "calculate 2^10"
-- "calculate sqrt(144)"
-- "calculate sin(30)"
-- "calculate factorial(5)"
-- "calculate pi * 10"
-- "what is 100 divided by 4"
-
-Supported functions include:
-
-`sqrt`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `log`, `ln`, `exp`, `abs`, `floor`, `ceil`, `factorial`, `round`, and `pow`.
-
-Trigonometric input uses degrees.
-
-## 6. Built-in commands
-
-Examples:
-
-- "what time is it"
-- "what is the date"
-- "open google"
-- "open youtube"
-- "open chrome"
-- "open notepad"
-- "open calculator"
-- "open file explorer"
-- "search Arduino ESP32"
-- "youtube search Python tutorial"
-- "AI status"
-- "help"
-- "shutdown"
-
-Anything that is not recognized as a built-in command is sent to the configured AI backend.
+ADB is powerful. Only enable debugging for a phone/computer you trust.
 
 ## Project structure
 
@@ -139,21 +106,21 @@ jarvis/
 ├── main.py
 ├── ai.py
 ├── math_engine.py
+├── laptop_control.py
+├── phone_control.py
+├── esp32_control.py
+├── esp32/
+│   └── JARVIS_ESP32.ino
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
 └── LICENSE
 ```
 
-## Important
-
-Speech recognition currently uses Google's online speech-recognition service through the SpeechRecognition library. The AI layer can be fully local with Ollama, but speech-to-text is not yet fully offline.
-
-The next architecture step can add:
-- phone microphone input
-- ESP32/ESP32-S3 microphone input
-- laptop automation
-- ESP32 device control
-- wake-word detection
+Future V1.6 targets:
+- phone as a JARVIS microphone
+- ESP32/ESP32-S3 microphone/audio terminal
 - offline speech recognition
-- plugins/tools for JARVIS
+- richer Windows automation
+- ESP32 rover/device profiles
+- wake-word detection
