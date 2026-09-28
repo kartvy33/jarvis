@@ -124,3 +124,32 @@ Future V1.6 targets:
 - richer Windows automation
 - ESP32 rover/device profiles
 - wake-word detection
+
+
+## Smart Rover integration
+
+JARVIS can control the Smart Rover through the rover's laptop Flask server.
+
+Set these Windows environment variables to match the Smart Rover server:
+
+```bat
+setx SMART_ROVER_URL "http://127.0.0.1:5000"
+setx SMART_ROVER_KEY "YOUR_SAME_ROVER_API_KEY"
+```
+
+Restart Command Prompt after using `setx`.
+
+Voice commands:
+- "rover forward"
+- "rover backward"
+- "rover left"
+- "rover right"
+- "rover stop"
+- "start patrol"
+- "stop patrol"
+- "rover status"
+- "rover GPS"
+- "rover map"
+
+The Smart Rover ESP32 sends GPS latitude, longitude, speed and satellite count to the laptop server. The Smart Rover dashboard displays a live Leaflet/OpenStreetMap map and the travelled GPS trail.
+
