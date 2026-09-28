@@ -18,6 +18,7 @@ from math_engine import calculate, looks_like_math
 from laptop_control import laptop_command
 from phone_control import phone_command
 from esp32_control import esp32_command
+from rover_control import rover_command
 
 
 engine = pyttsx3.init()
@@ -113,7 +114,7 @@ def handle_command(command: str) -> bool:
         speak(result)
         return True
 
-    # ESP32 control over local Wi-Fi HTTP.
+    # Smart Rover control through the laptop rover server.\n    if command.startswith(("rover ", "smart rover ", "smartrover ")):\n        result = rover_command(command)\n        speak(result)\n        return True\n\n    # ESP32 control over local Wi-Fi HTTP.
     if command.startswith(("esp32 ", "esp ")):
         result = esp32_command(command)
         speak(result)
