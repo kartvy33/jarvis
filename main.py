@@ -114,7 +114,13 @@ def handle_command(command: str) -> bool:
         speak(result)
         return True
 
-    # Smart Rover control through the laptop rover server.\n    if command.startswith(("rover ", "smart rover ", "smartrover ")):\n        result = rover_command(command)\n        speak(result)\n        return True\n\n    # ESP32 control over local Wi-Fi HTTP.
+    # Smart Rover control through the laptop rover server.
+    if command.startswith(("rover ", "smart rover ", "smartrover ")):
+        result = rover_command(command)
+        speak(result)
+        return True
+
+    # ESP32 control over local Wi-Fi HTTP.
     if command.startswith(("esp32 ", "esp ")):
         result = esp32_command(command)
         speak(result)
