@@ -35,6 +35,27 @@ def _request(command):
                 return "Smart Rover patrol stopped."
             if action == "STOP":
                 return "Smart Rover stopped."
+
+            if action is None and isinstance(data.get("rover"), dict):
+                status = data.get("rover", {}).get("status", {})
+                parts = []
+                if status.get("battery") is not None:
+                    parts.append(f"battery {status['battery']} percent")
+                if status.get("voltage") is not None:
+                    parts.append(f"voltage {float(status['voltage']):.2f} volts")
+                if status.get("temperature") is not None:
+                    parts.append(f"temperature {float(status['temperature']):.1f} degrees Celsius")
+                if status.get("humidity") is not None:
+                    parts.append(f"humidity {float(status['humidity']):.1f} percent")
+                if status.get("rain") is not None:
+                    rain = status["rain"] is True or status["rain"] == 1 or str(status["rain"]).lower() in {"true", "1", "detected"}
+                    parts.append("rain detected" if rain else "no rain detected")
+                if status.get("latitude") is not None and status.get("longitude") is not None:
+                    parts.append(f"GPS {status['latitude']:.6f}, {status['longitude']:.6f}")
+                if parts:
+                    return "Smart Rover status: " + ", ".join(parts) + "."
+                return "Smart Rover status received."
+
             if action:
                 return f"Smart Rover command sent: {action}."
             return "Smart Rover command completed."
